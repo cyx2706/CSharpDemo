@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Web;
 using MvcDemo.Dao;
+using MvcDemo.Entities;
 using MvcDemo.Exception;
 using MvcDemo.Utils;
 
@@ -11,12 +12,13 @@ namespace MvcDemo.Services
 {
     public class UserService
     {
-        public void login(string name,string pwd)
+        public User login(string name,string pwd)
         {
+            string trimName = name.Trim().Replace("\r\n","");
             // 密码进行md5加密
-            pwd = MD5Util.encode(pwd);
+            string encodePwd = MD5Util.encode(pwd);
             UserDao dao = new UserDao();
-            DataRowCollection rows = dao.FindUserByNameAndPwd(name, pwd);
+            DataRowCollection rows = dao.FindUserByNameAndPwd(trimName, encodePwd);
             int len = rows.Count;
             // 找不到即表示输入有误
             if (len < 1)
@@ -28,6 +30,7 @@ namespace MvcDemo.Services
             {
                 throw new LoginException("该账号存在异常");
             }
+
             foreach(DataRow user in rows)
             {
                 // 检验用户状态
@@ -36,10 +39,14 @@ namespace MvcDemo.Services
                     throw new LoginException("该账号已被冻结,不可登录");
                 }
 
-                //TODO 将信息存入session中
+                User usr = new User();
+                usr.Id = user["user_id"].ToString();
+                usr.Name = user["user_name"].ToString();
+                usr.Nick = user["user_nick"].ToString();
+                usr.Status = (bool) user["user_status"];
+                return usr;
             }
-            // rows
-            // Session 
+            return null;
         }
 
         public void logout()

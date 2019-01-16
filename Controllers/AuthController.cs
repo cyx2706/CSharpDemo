@@ -40,7 +40,9 @@ namespace MvcDemo.Controllers
                 UserService service = new UserService();
                 try
                 {
-                    service.login(loginRequest.Username, loginRequest.Password);
+                    // 登录并使用session记录用户id
+                    Session["user"] = service.login(loginRequest.Username, loginRequest.Password);
+                    map.Add("data", Session["user"]);
                     map.Add("status", true);
                 }
                 catch (LoginException e)

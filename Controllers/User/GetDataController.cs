@@ -8,10 +8,11 @@ namespace MvcDemo.Controllers.User
 {
     public class GetDataController : Controller
     {
-        // GET: GetData
+        [HttpPost]
         public ActionResult Index()
         {
-            return View();
+            // 验证session是否有效
+            return Json(Session["user"]);
         }
 
 

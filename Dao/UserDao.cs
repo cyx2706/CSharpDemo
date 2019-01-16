@@ -5,6 +5,7 @@ using System.Web;
 using System.Data;
 using MvcDemo.Utils;
 using System.Data.SqlClient;
+using MvcDemo.Exception;
 
 namespace MvcDemo.Dao
 {
@@ -22,15 +23,29 @@ namespace MvcDemo.Dao
             string sql =
                 "SELECT user_id,user_name,user_nick,user_status " +
                 "FROM w_user " +
-                "WEHRE  1=1 " +
-                "AND user_name = @name " +
-                "AND user_pwd = @pass";
+                "WHERE  1=1 " +
+                "AND user_name = '@name' " +
+                "AND user_pwd = '@pass'";
 
+            
             Dictionary<string, object> sqlParams = new Dictionary<string, object>();
             sqlParams.Add("@name", name);
             sqlParams.Add("@pass", pwd);
-            DataTable query = sqlHelp.getTable(sql, sqlParams);
-            return query.Rows;
+            try
+            {
+                return sqlHelp.getTable(sql, sqlParams).Rows;
+            }
+            catch(SqlHelpException e)
+            {
+                throw new LoginException("您的输入存在异常,请重新输入");
+            }
+            catch(System.Exception e)
+            {
+                // 记录到日志
+                string debug =  sqlHelp.getCmdTxt() + "\n" + e.StackTrace;
+                // 抛出业务错误
+                throw new LoginException("系统繁忙，请稍后再试");
+            }
         }
     }
 }

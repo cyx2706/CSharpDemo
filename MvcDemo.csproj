@@ -129,11 +129,17 @@
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\User\GetDataController.cs" />
+    <Compile Include="Dao\UserDao.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Exception\LoginException.cs" />
+    <Compile Include="Exception\SqlHelpException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\LoginRequest.cs" />
+    <Compile Include="Services\UserService.cs" />
+    <Compile Include="Utils\MD5Util.cs" />
     <Compile Include="Utils\SqlHelp.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -176,9 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Dao\" />
     <Folder Include="Models\" />
-    <Folder Include="Services\" />
     <Folder Include="Views\Auth\" />
     <Folder Include="Views\GetData\" />
   </ItemGroup>
